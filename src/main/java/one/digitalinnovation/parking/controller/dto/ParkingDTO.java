@@ -14,7 +14,6 @@ public class ParkingDTO {
     private String color;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime entryDate;
-
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime exitDate;
     private double bill;
