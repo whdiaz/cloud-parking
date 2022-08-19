@@ -1,6 +1,9 @@
 package one.digitalinnovation.parking.controller;
 
 import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import one.digitalinnovation.parking.controller.dto.ParkingCreateDTO;
 import one.digitalinnovation.parking.controller.dto.ParkingDTO;
@@ -16,6 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/parking")
 @Tag(name = "Parking Controller")
+@SecurityScheme(
+        name = "Basic authentication",
+        type = SecuritySchemeType.HTTP,
+        scheme = "basic"
+)
 public class ParkingController {
 
     private final ParkingService parkingService;
@@ -27,7 +35,7 @@ public class ParkingController {
     }
 
     @GetMapping
-    @Operation(summary = "find All parkings")
+    @Operation(summary = "find All parkings", security = @SecurityRequirement(name = "Basic authentication"))
     public ResponseEntity<List<ParkingDTO>> finAll(){
         List<Parking> parkingList = parkingService.findAll();
         List<ParkingDTO> result = parkingMapper.toParkingDTOList(parkingList);
@@ -35,7 +43,7 @@ public class ParkingController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "find By Id")
+    @Operation(summary = "find By Id", security = @SecurityRequirement(name = "Basic authentication"))
     public ResponseEntity<ParkingDTO> findById(@PathVariable String id){
         Parking parking = parkingService.finById(id);
         ParkingDTO result = parkingMapper.toParkingDTO(parking);
@@ -44,7 +52,7 @@ public class ParkingController {
 
 
     @PostMapping
-    @Operation(summary = "create one parking")
+    @Operation(summary = "create one parking", security = @SecurityRequirement(name = "Basic authentication"))
     public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO dto){
         var parkingCreate = parkingMapper.toParkingCreate(dto);
         var parking = parkingService.create(parkingCreate);
@@ -54,14 +62,14 @@ public class ParkingController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "delete")
+    @Operation(summary = "delete", security = @SecurityRequirement(name = "Basic authentication"))
     public ResponseEntity delete(@PathVariable String id){
         parkingService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "update")
+    @Operation(summary = "update", security = @SecurityRequirement(name = "Basic authentication"))
     public ResponseEntity<ParkingDTO> update(@PathVariable String id, @RequestBody ParkingCreateDTO dto){
         var parkingCreate = parkingMapper.toParkingCreate(dto);
         var parking = parkingService.update(id, parkingCreate);
@@ -70,7 +78,7 @@ public class ParkingController {
     }
 
     @PostMapping("/{id}")
-    @Operation(summary = "CheckOut")
+    @Operation(summary = "CheckOut", security = @SecurityRequirement(name = "Basic authentication"))
     public ResponseEntity<ParkingDTO> checkOut(@PathVariable String id){
         Parking parking = parkingService.checkOut(id);
         return ResponseEntity.ok(parkingMapper.toParkingDTO(parking));
